@@ -1,20 +1,18 @@
-FROM registry.access.redhat.com/ubi8/python-39
+# start with operating system for Red Hat Openshift
+FROM registry.access.redhat.com/ubi8/python-312
 
-# Add application sources with correct permissions for OpenShift
-USER 0
-# ADD app-src .
-RUN chown -R 1001:0 ./
+COPY ./requirements.txt /opt/app-root/src
+RUN cd /opt/app-root/src & \
+    pip install -r requirements.txt
+
+# this will invalidate the image layer - copy files
+COPY . /opt/app-root/src
+
+# Change this to UID that matches your username on the host
 USER 1001
 
-WORKDIR /
-
-COPY ./requirements.txt .
-
-RUN pip install -U "pip>=19.3.1"
-RUN pip3 install -r requirements.txt
-
-COPY . .
+# Expose the application port
 EXPOSE 8010
 
-CMD ["fastapi", "run", "app.py", "--port", "8010"]
-
+# Command to run the FastAPI application
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8010"]
