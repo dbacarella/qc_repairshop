@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Translation Skill API",
+    "description": "This API provides translation for two languages.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8010",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/query": {
+      "post": {
+        "summary": "Translate given text from the specified source language to the specified target language.",
+        "description": "Returns translated text provided as input.",
+        "operationId": "getTranslation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Hello, how are you today?"
+                  },
+                  "lang_source": {
+                    "type": "string",
+                    "example": "English"
+                  },
+                  "lang_dest": {
+                    "type": "string",
+                    "example": "Spanish"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response translation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "translation": {
+                      "type": "string",
+                      "example": "Hello, how are you today?"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
